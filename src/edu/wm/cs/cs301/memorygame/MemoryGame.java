@@ -8,54 +8,12 @@ public class MemoryGame {
 	
 	
 	public MemoryGame() {
-		String difficulty = "";
+		System.out.print("Enter the number of rows:");
+		int rows = s.nextInt();
+		System.out.print("Enter the number of cols:");
+		int cols = s.nextInt();
 		
-		while(!difficulty.equals("easy") && !difficulty.equals("medium") && !difficulty.equals("hard")) {
-			System.out.println("Select difficulty: 'easy', 'medium', or 'hard'.");
-			difficulty = s.nextLine().toLowerCase();
-			if (difficulty.equals("easy")) {
-				board = new GameBoard(3, 4);
-			} else if (difficulty.equals("medium")) {
-				board = new GameBoard(4, 7);
-			} else if (difficulty.equals("hard")) {
-				board = new GameBoard(7, 8);
-			} else {
-				System.out.println("Invalid difficulty.");
-			}
-		}
-	
-		GamePiece[][] gameBoard = board.getBoard();
 		
-		System.out.print("     ");
-		for (int i = 0; i < gameBoard[0].length; i++) {
-			System.out.print((i+1) + "   ");
-		}
-		System.out.println();
-		
-		System.out.print("   =");
-		for (int i = 0; i < gameBoard[0].length; i++) {
-			System.out.print("====");
-		}
-		System.out.println("");
-		
-		for (int i = 0; i < gameBoard.length; i++) {
-			System.out.print(i+1 + " ||");
-			for (int j = 0; j < gameBoard[i].length; j++) {
-				System.out.print(" " + gameBoard[i][j].getSymbol() + " |");
-			}
-			System.out.println("|");
-			if (i+1 != gameBoard.length) {
-				System.out.print("  --");
-				for (int j = 0; j < gameBoard[i].length; j++) {
-					System.out.print("----");
-				}
-				System.out.println("-");
-			}
-		}
-		
-		System.out.print("   =");
-		for (int i = 0; i < gameBoard[0].length; i++) {
-			System.out.print("====");
-		}
+		board = new GameBoard(rows, cols);
 	}
 }
