@@ -3,24 +3,51 @@ import java.util.Scanner;
 
 public class MemoryGame {
 	private GameBoard board;
+	private Alphabet a;
 	Scanner s = new Scanner(System.in);
 	
-	
-	
-	public MemoryGame() {
-		String difficulty = "";
-		
-		while(!difficulty.equals("easy") && !difficulty.equals("medium") && !difficulty.equals("hard")) {
+	public MemoryGame() {	
+		String selectedDifficulty = "";
+		boolean badInput = true;
+		while(badInput) {
 			System.out.println("Select difficulty: 'easy', 'medium', or 'hard'.");
-			difficulty = s.nextLine().toLowerCase();
-			if (difficulty.equals("easy")) {
-				board = new GameBoard(3, 4);
-			} else if (difficulty.equals("medium")) {
-				board = new GameBoard(4, 7);
-			} else if (difficulty.equals("hard")) {
-				board = new GameBoard(7, 8);
+			selectedDifficulty = s.nextLine().toLowerCase();
+			if (selectedDifficulty.equals("easy") || selectedDifficulty.equals("medium") || selectedDifficulty.equals("hard")) {
+				badInput = false;
 			} else {
 				System.out.println("Invalid difficulty.");
+			}
+		}
+		
+		String selectedAlphabet = "";
+		badInput = true;
+		while (badInput) {
+			System.out.println("Select character set: 'latin' or 'greek'.");
+			selectedAlphabet = s.nextLine().toLowerCase();
+			if (selectedAlphabet.equals("latin") || selectedAlphabet.equals("greek")) {
+				badInput = false;
+			} else {
+				System.out.println("Invalid character set.");
+			}
+		}
+		
+		if (selectedAlphabet.equals("latin")) {
+			this.a = new LatinAlphabet();
+			if (selectedDifficulty.equals("easy")) {
+				board = new GameBoard(3, 4, a);
+			} else if (selectedDifficulty.equals("medium")) {
+				board = new GameBoard(4, 7, a);
+			} else {
+				board = new GameBoard(7, 8, a);
+			}
+		} else {
+			this.a = new GreekAlphabet();
+			if (selectedDifficulty.equals("easy")) {
+				board = new GameBoard(3, 4, a);
+			} else if (selectedDifficulty.equals("medium")) {
+				board = new GameBoard(4, 7, a);
+			} else {
+				board = new GameBoard(7, 8, a);
 			}
 		}
 	
