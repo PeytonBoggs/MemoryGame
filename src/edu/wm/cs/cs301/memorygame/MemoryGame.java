@@ -10,7 +10,7 @@ public class MemoryGame {
 		String selectedDifficulty = "";
 		boolean badInput = true;
 		while(badInput) {
-			System.out.println("Select difficulty: 'easy', 'medium', or 'hard'.");
+			System.out.print("Select difficulty: 'easy', 'medium', or 'hard': ");
 			selectedDifficulty = s.nextLine().toLowerCase();
 			if (selectedDifficulty.equals("easy") || selectedDifficulty.equals("medium") || selectedDifficulty.equals("hard")) {
 				badInput = false;
@@ -22,12 +22,12 @@ public class MemoryGame {
 		String selectedAlphabet = "";
 		badInput = true;
 		while (badInput) {
-			System.out.println("Select character set: 'latin' or 'greek'.");
+			System.out.print("Select symbol set: 'latin' or 'greek': ");
 			selectedAlphabet = s.nextLine().toLowerCase();
 			if (selectedAlphabet.equals("latin") || selectedAlphabet.equals("greek")) {
 				badInput = false;
 			} else {
-				System.out.println("Invalid character set.");
+				System.out.println("Invalid symbol set.");
 			}
 		}
 		
@@ -53,6 +53,20 @@ public class MemoryGame {
 	
 		GamePiece[][] gameBoard = board.getBoard();
 		
+		int turn = 1;
+		boolean finished = false;
+		
+		while(!finished) {
+			System.out.println("Turn: " + turn);
+			printBoard(gameBoard);
+			System.out.print("Choose a tile [R C] or type 'quit' to exit: ");
+			String firstInput = s.nextLine();
+			
+			finished = true;
+		}
+	}
+	
+	public void printBoard(GamePiece[][] gameBoard) {
 		System.out.print("     ");
 		for (int i = 0; i < gameBoard[0].length; i++) {
 			System.out.print((i+1) + "   ");
@@ -84,5 +98,6 @@ public class MemoryGame {
 		for (int i = 0; i < gameBoard[0].length; i++) {
 			System.out.print("====");
 		}
+		System.out.println();
 	}
 }

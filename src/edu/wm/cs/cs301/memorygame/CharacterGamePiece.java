@@ -10,7 +10,10 @@ public class CharacterGamePiece implements GamePiece {
 	}
 
 	public Character getSymbol() {
-		return this.symbol;
+		if (visible) {
+			return this.symbol;
+		}
+		return '?';
 	}
 	
 	public void setVisible(boolean v) {

@@ -8,7 +8,6 @@ public class GameBoard {
     private final GamePiece[][] board;
   
 	public GameBoard(int rows, int cols, Alphabet a) {
-		GamePiece[][] tempBoard = new GamePiece[rows][cols];
 		char[] fullAlphabet = a.toCharArray();
 
 		int numCharacters;
@@ -30,6 +29,8 @@ public class GameBoard {
 		
 		symbolList.addAll(symbolList);
 		Collections.shuffle(symbolList);
+		
+		GamePiece[][] tempBoard = new GamePiece[rows][cols];
 		
     	int symbolIndex = 0;
     	for(int i = 0; i < tempBoard.length; i++) {
