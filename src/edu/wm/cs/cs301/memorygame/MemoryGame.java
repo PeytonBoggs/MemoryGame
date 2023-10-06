@@ -6,7 +6,10 @@ public class MemoryGame {
 	private Alphabet a;
 	Scanner s = new Scanner(System.in);
 	
-	public MemoryGame() {	
+	public MemoryGame() {
+		printWelcomeMessage();
+		waitForEnter();
+		
 		String difficulty = getDifficulty();
 		String alphabet = getAlphabet();
 		
@@ -56,6 +59,15 @@ public class MemoryGame {
 			waitForEnter();
 			turn++;
 		}
+	}
+	
+	public void printWelcomeMessage() {
+		System.out.println("Welcome to Memory Game!");
+		System.out.println("In this game, you'll be shown a grid of cards that are initially flipped over.");
+		System.out.println("There will be numbers along the grid that indicate which row and column a card is on.");
+		System.out.println("Each turn, you can select two cards to be flipped over using the grid notation [row column].");
+		System.out.println("If the two cards match, they will stay revealed - if not, they will be flipped back over.");
+		System.out.println("The object is to reveal all cards in as few turns as possible. Good luck!");
 	}
 	
 	public String getDifficulty() {
