@@ -10,7 +10,7 @@ public class MemoryGame {
 		String difficulty = getDifficulty();
 		String alphabet = getAlphabet();
 		
-		GameBoard board = createBoard(difficulty, alphabet);
+		this.board = createBoard(difficulty, alphabet);
 		GamePiece[][] gameBoard = board.getBoard();
 		
 		int turn = 1;
@@ -20,19 +20,41 @@ public class MemoryGame {
 			System.out.println("Turn: " + turn);
 			printBoard(gameBoard);
 			
-			String firstCardRC = getRC(gameBoard);
-			gameBoard[Integer.valueOf(firstCardRC.substring(0, 1)) - 1][Integer.valueOf(firstCardRC.substring(2, 3)) - 1].setVisible(true);
+			GamePiece firstCard = getCard(gameBoard);
+			firstCard.setVisible(true);
+			if (firstCard.getSymbol() == 'q') {
+				System.out.println("Game aborted.");
+				break;
+			}
+			
+			System.out.println("Turn: " + turn);
+			printBoard(gameBoard);
+
+			GamePiece secondCard = getCard(gameBoard);
+			secondCard.setVisible(true);
+			if (secondCard.getSymbol() == 'q') {
+				System.out.println("Game aborted.");
+				break;
+			}
 			
 			System.out.println("Turn: " + turn);
 			printBoard(gameBoard);
 			
-			String secondCardRC = getRC(gameBoard);
-			gameBoard[Integer.valueOf(secondCardRC.substring(0, 1)) - 1][Integer.valueOf(secondCardRC.substring(2, 3)) - 1].setVisible(true);
+			if (firstCard.equals(secondCard)) {
+				System.out.println("Match!");
+			} else {
+				System.out.println("No match. This turn has ended.");
+				firstCard.setVisible(false);
+				secondCard.setVisible(false);
+			}
 			
-			System.out.println("Turn: " + turn);
-			printBoard(gameBoard);
+			if (checkWon(gameBoard)) {
+				System.out.println("Game won in " + turn + " turns!");
+				break;
+			}
 			
-			finished = true;
+			waitForEnter();
+			turn++;
 		}
 	}
 	
@@ -89,9 +111,11 @@ public class MemoryGame {
 		return board;
 	}
 	
-	public String getRC(GamePiece[][] gameBoard) {
+	public GamePiece getCard(GamePiece[][] gameBoard) {
 		int upperRowBound = gameBoard.length;
 		int upperColBound = gameBoard[0].length;
+		
+		GamePiece quit = new CharacterGamePiece('q');
 		
 		boolean badInput = true;
 		while(badInput) {
@@ -100,7 +124,7 @@ public class MemoryGame {
 			
 			try {
 				if (input.equals("quit")) {
-					return input;
+					return quit;
 				}
 				
 				if (input.length() != 3) {
@@ -110,15 +134,42 @@ public class MemoryGame {
 				Integer r = Integer.valueOf(input.substring(0, 1));
 				char middle = input.charAt(1);
 				Integer c = Integer.valueOf(input.substring(2, 3));
-
+				
 				if (1 <= r && r <= upperRowBound && middle == ' ' && 1 <= c && c <= upperColBound) {
-					return input;
+					GamePiece inputCard = gameBoard[Integer.valueOf(input.substring(0, 1)) - 1][Integer.valueOf(input.substring(2, 3)) - 1];
+					if (inputCard.isVisible()) {
+						throw new Exception();
+					}
+					return inputCard;
+				} else {
+					throw new Exception();
 				}
 			} catch (Exception e) {
 				System.out.println("Invalid input.");
 			}
 		}
-		return "";
+		return quit;
+	}
+	
+	public void waitForEnter() {
+		System.out.print("Press <ENTER> to continue: ");
+		@SuppressWarnings("unused")
+		String input = s.nextLine().toLowerCase();
+		System.out.println("");
+	}
+	
+	public boolean checkWon(GamePiece[][] gameBoard) {
+		boolean won = true;
+		
+		for (int i = 0; i < gameBoard.length; i++) {
+			for (int j = 0; j < gameBoard[0].length; j++) {
+				if (!gameBoard[i][j].isVisible()) {
+					won = false;
+				}
+			}
+		}
+		
+		return won;
 	}
 	
 	public void printBoard(GamePiece[][] gameBoard) {

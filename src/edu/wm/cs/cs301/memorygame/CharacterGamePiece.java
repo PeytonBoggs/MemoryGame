@@ -17,15 +17,15 @@ public class CharacterGamePiece implements GamePiece {
 	}
 	
 	public void setVisible(boolean v) {
-		visible = !visible;
+		visible = v;
 	}
 	
 	public boolean isVisible() {
 		return visible;
 	}
 	
-	public boolean equals(GamePiece other) {
-		if (symbol == other.getSymbol()) {
+	public boolean equals(GamePiece other) {		
+		if (symbol.compareTo(other.getSymbol()) == 0) {
 			return true;
 		}
 		return false;
