@@ -1,14 +1,25 @@
 package edu.wm.cs.cs301.memorygame;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class MemoryGame {
 	private GameBoard board;
 	private Alphabet a;
 	Scanner s = new Scanner(System.in);
-	
-	public MemoryGame() {
+		
+	public MemoryGame() {		
 		printWelcomeMessage();
 		waitForEnter();
+		
+		try {
+			printLeaderboard();
+		} catch (IOException e) {
+			System.out.println("IOException caught.");
+			e.printStackTrace();
+		}
 		
 		String difficulty = getDifficulty();
 		String alphabet = getAlphabet();
@@ -59,6 +70,96 @@ public class MemoryGame {
 			waitForEnter();
 			turn++;
 		}
+		
+		try {
+			updateLeaderboard(difficulty, turn);
+		} catch (IOException e) {
+			System.out.println("IOException caught.");
+			e.printStackTrace();
+		}
+	}
+	
+	public void printLeaderboard() throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader("resources/leaderboard.txt"));
+		
+		String easy = br.readLine();
+		String easyName = easy.substring(0, easy.indexOf(","));
+		String easyScore = easy.substring(easy.indexOf(",")+1, easy.length());
+		
+		String medium = br.readLine();
+		String mediumName = medium.substring(0, medium.indexOf(","));
+		String mediumScore = medium.substring(medium.indexOf(",")+1, medium.length());
+		
+		String hard = br.readLine();
+		String hardName = hard.substring(0, hard.indexOf(","));
+		String hardScore = hard.substring(hard.indexOf(",")+1, hard.length());
+			
+		System.out.println();
+		System.out.println("Current Leaderboard:");
+		System.out.println("====================");
+		System.out.println("Easy - " + easyName + " with " + easyScore + " points");
+		System.out.println("Medium - " + mediumName + " with " + mediumScore + " points");
+		System.out.println("Hard - " + hardName + " with " + hardScore + " points");
+		System.out.println();
+		
+		br.close();
+	}
+	
+	public void updateLeaderboard(String difficulty, int turn) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader("resources/leaderboard.txt"));
+		
+		String stringRecord = "0";
+		
+		String easy = br.readLine();
+		String easyName = easy.substring(0, easy.indexOf(","));
+		String easyScore = easy.substring(easy.indexOf(",")+1, easy.length());
+		
+		String medium = br.readLine();
+		String mediumName = medium.substring(0, medium.indexOf(","));
+		String mediumScore = medium.substring(medium.indexOf(",")+1, medium.length());
+		
+		String hard = br.readLine();
+		String hardName = hard.substring(0, hard.indexOf(","));
+		String hardScore = hard.substring(hard.indexOf(",")+1, hard.length());
+		
+		if (difficulty.equals("easy")) {
+			stringRecord = easyScore;
+		} else if (difficulty.equals("medium")) {
+			stringRecord = mediumScore;
+			stringRecord = medium.substring(medium.indexOf(",")+1, medium.length());
+		} else {
+			stringRecord = hardScore;
+		}
+		
+		br.close();
+		
+		Integer intRecord = 0;
+		intRecord = Integer.valueOf(stringRecord);
+		
+		if (turn > intRecord) {
+			return;
+		} else if (turn == intRecord) {
+			System.out.println("Tied Record!");
+			return;
+		}
+		
+		System.out.println("New Record!");
+		System.out.print("Enter your name: ");
+		String newName = s.nextLine();
+		System.out.println();
+		
+		
+		FileWriter fw = new FileWriter("resources/leaderboard.txt");
+		
+		if (difficulty.equals("easy")) {
+			fw.write(newName + "," + turn + "\n" + medium + "\n" + hard);
+		} else if (difficulty.equals("medium")) {
+			fw.write(easy + "\n" + newName + "," + turn + "\n" + hard);
+		} else {
+			fw.write(easy + "\n" + medium + "\n" + newName + "," + turn);
+		}
+		
+		fw.close();
 	}
 	
 	public void printWelcomeMessage() {
