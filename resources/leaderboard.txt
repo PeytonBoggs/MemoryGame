@@ -1,3 +1,2 @@
 Peyton,9
-Peyton,26
-Peyton,73
+Peyton,30

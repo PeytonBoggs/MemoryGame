@@ -79,64 +79,81 @@ public class MemoryGame {
 		}
 	}
 	
-	public void printLeaderboard() throws IOException {
+	public String[] getLeaderboard() throws IOException {
 		BufferedReader br = new BufferedReader(new FileReader("resources/leaderboard.txt"));
+		String[] toReturn = new String[6];
 		
 		String easy = br.readLine();
-		String easyName = easy.substring(0, easy.indexOf(","));
-		String easyScore = easy.substring(easy.indexOf(",")+1, easy.length());
+		if (easy == null || easy.equals(",") || easy.equals("")) {
+			toReturn[0] = null;
+			toReturn[1] = null;
+		} else {
+			toReturn[0] = easy.substring(0, easy.indexOf(","));
+			toReturn[1] = easy.substring(easy.indexOf(",")+1, easy.length());	
+		}
 		
 		String medium = br.readLine();
-		String mediumName = medium.substring(0, medium.indexOf(","));
-		String mediumScore = medium.substring(medium.indexOf(",")+1, medium.length());
+		if (medium == null || medium.equals(",") || medium.equals("")) {
+			toReturn[2] = null;
+			toReturn[3] = null;
+		} else {
+			toReturn[2] = medium.substring(0, medium.indexOf(","));
+			toReturn[3] = medium.substring(medium.indexOf(",")+1, medium.length());	
+		}
 		
 		String hard = br.readLine();
-		String hardName = hard.substring(0, hard.indexOf(","));
-		String hardScore = hard.substring(hard.indexOf(",")+1, hard.length());
+		if (hard == null || hard.equals(",") || hard.equals("")) {
+			toReturn[4] = null;
+			toReturn[5] = null;
+		} else {
+			toReturn[4] = hard.substring(0, hard.indexOf(","));
+			toReturn[5] = hard.substring(hard.indexOf(",")+1, hard.length());	
+		}
+		
+		br.close();
+		return toReturn;
+	}
+	
+	public void printLeaderboard() throws IOException {		
+		String[] leaderboard = getLeaderboard();
 			
 		System.out.println();
 		System.out.println("Current Leaderboard:");
 		System.out.println("====================");
-		System.out.println("Easy - " + easyName + " with " + easyScore + " points");
-		System.out.println("Medium - " + mediumName + " with " + mediumScore + " points");
-		System.out.println("Hard - " + hardName + " with " + hardScore + " points");
+		if (leaderboard[0] == null) {
+			System.out.println("Easy - ");
+		} else {
+			System.out.println("Easy - " + leaderboard[0] + " with " + leaderboard[1] + " points");	
+		}
+		if (leaderboard[2] == null) {
+			System.out.println("Medium - ");
+		} else {
+			System.out.println("Medium - " + leaderboard[2] + " with " + leaderboard[3] + " points");	
+		}
+		if (leaderboard[4] == null) {
+			System.out.println("Hard - ");
+		} else {
+			System.out.println("Hard - " + leaderboard[4] + " with " + leaderboard[5] + " points");	
+		}
 		System.out.println();
-		
-		br.close();
 	}
 	
-	public void updateLeaderboard(String difficulty, int turn) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader("resources/leaderboard.txt"));
+	public void updateLeaderboard(String difficulty, int turn) throws IOException {	
+		String stringRecord = "-1";
+		String[] leaderboard = getLeaderboard();
 		
-		String stringRecord = "0";
-		
-		String easy = br.readLine();
-		String easyName = easy.substring(0, easy.indexOf(","));
-		String easyScore = easy.substring(easy.indexOf(",")+1, easy.length());
-		
-		String medium = br.readLine();
-		String mediumName = medium.substring(0, medium.indexOf(","));
-		String mediumScore = medium.substring(medium.indexOf(",")+1, medium.length());
-		
-		String hard = br.readLine();
-		String hardName = hard.substring(0, hard.indexOf(","));
-		String hardScore = hard.substring(hard.indexOf(",")+1, hard.length());
-		
-		if (difficulty.equals("easy")) {
-			stringRecord = easyScore;
-		} else if (difficulty.equals("medium")) {
-			stringRecord = mediumScore;
-			stringRecord = medium.substring(medium.indexOf(",")+1, medium.length());
-		} else {
-			stringRecord = hardScore;
+		if (difficulty.equals("easy") && leaderboard[1] != null) {
+			stringRecord = leaderboard[1];
+		} else if (difficulty.equals("medium") && leaderboard[3] != null) {
+			stringRecord = leaderboard[3];
+		} else if (difficulty.equals("hard") && leaderboard[5] != null) {
+			stringRecord = leaderboard[5];
 		}
-		
-		br.close();
 		
 		Integer intRecord = 0;
 		intRecord = Integer.valueOf(stringRecord);
 		
-		if (turn > intRecord) {
+		if (turn > intRecord && intRecord != -1) {
 			return;
 		} else if (turn == intRecord) {
 			System.out.println("Tied Record!");
@@ -150,6 +167,20 @@ public class MemoryGame {
 		
 		
 		FileWriter fw = new FileWriter("resources/leaderboard.txt");
+		
+		String easy = "";
+		String medium = "";
+		String hard = "";
+		
+		if (leaderboard[0] != null) {
+			easy = leaderboard[0] + "," + leaderboard[1];
+		}
+		if (leaderboard[2] != null) {
+			medium = leaderboard[2] + "," + leaderboard[3];
+		}
+		if (leaderboard[4] != null) {
+			hard = leaderboard[4] + "," + leaderboard[5];
+		}
 		
 		if (difficulty.equals("easy")) {
 			fw.write(newName + "," + turn + "\n" + medium + "\n" + hard);
