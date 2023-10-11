@@ -71,6 +71,9 @@ public class MemoryGame {
 			turn++;
 		}
 		
+		System.out.println("Revealed Board:");
+		revealBoard(gameBoard);
+		
 		try {
 			updateLeaderboard(difficulty, turn);
 		} catch (IOException e) {
@@ -349,5 +352,14 @@ public class MemoryGame {
 			System.out.print("====");
 		}
 		System.out.println();
+	}
+	
+	public void revealBoard(GamePiece[][] gameBoard) {
+		for (int i = 0; i < gameBoard.length; i++) {
+			for (int j = 0; j < gameBoard[i].length; j++) {
+				gameBoard[i][j].setVisible(true);	
+			}
+		}
+		printBoard(gameBoard);
 	}
 }
